@@ -228,11 +228,11 @@ CLI-Expense-Tracker/
 │     └─ AuthManager.java
 ├─ data/
 │  ├─ accounts/        (stores account files for each user)
-│  │  └─ username.json
+│  │  └─ username.txt
 │  ├─ expenses/        (optional expense files per user)
-│  │  └─ username_expenses.json
+│  │  └─ username_expenses.txt
 │  └─ history/         (stores change logs per user)
-│     └─ username_history.json
+│     └─ username_history.tx
 └─ README.md
 ```
 
