@@ -1,7 +1,3 @@
-Ah! I see what happened — the main issue is that Markdown doesn’t render indented code blocks and nested folder structures properly if we just use plain code fences. We need to **use triple backticks for code blocks and preserve spacing**, and for the file structure, **we can also use a “tree” style inside a code block**.
-
-Here’s a **fully cleaned-up, properly structured Markdown** ready to copy-paste:
-
 # CLI Expense Tracker Project Specification
 
 ## Project Overview
