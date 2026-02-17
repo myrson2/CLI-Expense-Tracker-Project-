@@ -1,14 +1,9 @@
 # CLI Expense Tracker Project Specification
 
 ## Project Overview
-Create a **command-line Expense Tracker** using **Java** that demonstrates:
-
-- **Object-Oriented Programming (OOP)**
-- **Exception Handling**
-- **File Handling / Persistence**
-- **Clean Architecture & Modular Design**
-
-The project should be **portfolio-ready**, **modular**, and **easy to extend**.
+**CLI Expense Tracker** is a Java-based command-line application to manage personal expenses efficiently.  
+It demonstrates **OOP concepts**, **exception handling**, and **file persistence** while maintaining a clean, modular architecture.  
+The project is portfolio-ready, easy to extend, and serves as a practical example of software design best practices.
 
 ---
 
@@ -16,26 +11,37 @@ The project should be **portfolio-ready**, **modular**, and **easy to extend**.
 
 The CLI application must support:
 
-1. **Add Expense**  
+1. **User Authentication & Account Management**
+   - Register new users with username and password  
+   - Login existing users  
+   - Track **account details** in separate account files  
+   - Each user can optionally create a **personal expense file**  
+   - System loads user data from account file when logging in  
+
+2. **Add Expense**  
    - User inputs **description** and **amount**  
-   - Expense is saved **persistently**
+   - Expense is saved in the user’s personal expense file  
 
-2. **Update Expense**  
-   - Modify **description** and/or **amount**
+3. **Update Expense**  
+   - Modify **description** and/or **amount**  
 
-3. **Delete Expense**  
-   - Remove an existing expense
+4. **Delete Expense**  
+   - Remove an existing expense  
 
-4. **View All Expenses**  
-   - Display all saved expenses
+5. **View All Expenses**  
+   - Display all expenses for the logged-in user  
 
-5. **View Expense Summary**  
+6. **View Expense Summary**  
    - Total expenses  
    - Count of expenses  
-   - Highest and lowest expense
+   - Highest and lowest expense  
 
-6. **View Monthly Summary**  
-   - Summary for a specific month of the current year
+7. **View Monthly Summary**  
+   - Summary for a specific month of the current year  
+
+8. **Expense History**
+   - Track all past changes (add, update, delete) with timestamps  
+   - Option to view history for auditing purposes  
 
 ---
 
@@ -55,16 +61,21 @@ Handle errors like:
 - Expense not found
 - File read/write failures
 - Empty expense list  
+- User not found / authentication failed  
 
 Use **custom exceptions**:
 - `InvalidAmountException`
 - `ExpenseNotFoundException`
 - `DataAccessException`
+- `AuthenticationException`
+- `AccountNotFoundException`
 
 ### 3. File Handling
+- **Account files:** Store user details (username, password, linked expense file)  
+- **Expense files:** Each user can have a separate file for their expenses  
+- **History files:** Track changes for auditing  
 - Persist data in **JSON, CSV, TXT, or Binary**  
-- **Load data** at program start  
-- **Save data** after add/update/delete  
+- Load data at program start and save after operations  
 
 ### 4. CLI Requirements
 - Menu-driven interface  
@@ -74,13 +85,20 @@ Use **custom exceptions**:
 
 **Example Menu:**
 ```text
+1. Register
+2. Login
+0. Exit
+
+After Login:
 1. Add Expense
 2. Update Expense
 3. Delete Expense
 4. View Expenses
 5. View Summary
 6. View Monthly Summary
-0. Exit
+7. View Expense History
+8. Manage Account / Expense File
+0. Logout
 ````
 
 ---
@@ -89,75 +107,94 @@ Use **custom exceptions**:
 
 **Suggested Packages / Modules:**
 
-```text
-/model
-/service
-/repository
-/exception
-/ui
-/util
-```
+* [model](./src/model)
+* [service](./src/service)
+* [repository](./src/repository)
+* [exception](./src/exception)
+* [ui](./src/ui)
+* [util](./src/util)
+* [auth](./src/auth)  *(AccountManager & authentication)*
 
 ### MODEL Package
 
 * **Purpose:** Core entities
-* **Class:** `Expense`
-* **Fields:** `id`, `description`, `amount`, `date`
-* **Methods:** getters/setters, `toString()`
+* **Classes:**
+
+  * [Expense.java](./src/model/Expense.java)
+
+    * Fields: `id`, `description`, `amount`, `date`, `userId`
+    * Methods: getters/setters, `toString()`
+  * [User.java](./src/model/User.java)
+
+    * Fields: `id`, `username`, `password`, `expenseFileName`
+    * Methods: getters/setters, authentication helpers
 
 ### SERVICE Package
 
 * **Purpose:** Business logic
-* **Class:** `ExpenseService`
-* **Methods:**
+* **Classes:**
 
-  * `addExpense()`
-  * `updateExpense()`
-  * `deleteExpense()`
-  * `getAllExpenses()`
-  * `getSummary()`
-  * `getMonthlySummary()`
+  * [ExpenseService.java](./src/service/ExpenseService.java)
+
+    * Methods: `addExpense()`, `updateExpense()`, `deleteExpense()`, `getAllExpenses()`, `getSummary()`, `getMonthlySummary()`, `getHistory()`
+  * [UserService.java](./src/service/UserService.java)
+
+    * Methods: `registerUser()`, `loginUser()`, `validateUser()`, `createExpenseFile()`
 
 ### REPOSITORY Package
 
 * **Purpose:** File persistence
-* **Class:** `ExpenseRepository`
-* **Methods:**
+* **Classes:**
 
-  * `loadFromFile()`
-  * `saveToFile()`
-  * `add()`
-  * `update()`
-  * `delete()`
+  * [ExpenseRepository.java](./src/repository/ExpenseRepository.java)
+
+    * Methods: `loadFromFile()`, `saveToFile()`, `add()`, `update()`, `delete()`, `loadHistory()`
+  * [UserRepository.java](./src/repository/UserRepository.java)
+
+    * Methods: `loadUsers()`, `saveUsers()`, `addUser()`, `getUserByUsername()`, `updateAccountFile()`
 
 ### EXCEPTION Package
 
 * **Purpose:** Custom exceptions
 * **Classes:**
 
-  * `InvalidAmountException`
-  * `ExpenseNotFoundException`
-  * `DataAccessException`
+  * [InvalidAmountException.java](./src/exception/InvalidAmountException.java)
+  * [ExpenseNotFoundException.java](./src/exception/ExpenseNotFoundException.java)
+  * [DataAccessException.java](./src/exception/DataAccessException.java)
+  * [AuthenticationException.java](./src/exception/AuthenticationException.java)
+  * [AccountNotFoundException.java](./src/exception/AccountNotFoundException.java)
 
 ### UI Package
 
 * **Purpose:** CLI interaction
-* **Class:** `ConsoleUI`
+* **Class:** [ConsoleUI.java](./src/ui/ConsoleUI.java)
 * **Methods:**
 
   * `displayMenu()`
   * `handleUserInput()`
   * `showExpenses()`
   * `showSummary()`
+  * `showHistory()`
+  * `showLoginMenu()`
+  * `manageAccount()` *(create/rename expense file)*
 
 ### UTIL Package
 
 * **Purpose:** Helper classes
-* **Examples:**
+* **Classes:**
 
-  * `InputValidator`
-  * `DateUtils`
-  * `FileUtils`
+  * [InputValidator.java](./src/util/InputValidator.java)
+  * [DateUtils.java](./src/util/DateUtils.java)
+  * [FileUtils.java](./src/util/FileUtils.java)
+
+### AUTH Package
+
+* **Purpose:** Handle authentication & account management
+* **Classes:**
+
+  * [AuthManager.java](./src/auth/AuthManager.java)
+
+    * Methods: `register()`, `login()`, `logout()`, `isAuthenticated()`, `loadAccountFile()`, `createExpenseFile()`
 
 ---
 
@@ -167,30 +204,35 @@ Use **custom exceptions**:
 CLI-Expense-Tracker/
 ├─ src/
 │  ├─ model/
-│  │  └─ Expense.java
-│  │
+│  │  ├─ Expense.java
+│  │  └─ User.java
 │  ├─ service/
-│  │  └─ ExpenseService.java
-│  │
+│  │  ├─ ExpenseService.java
+│  │  └─ UserService.java
 │  ├─ repository/
-│  │  └─ ExpenseRepository.java
-│  │
+│  │  ├─ ExpenseRepository.java
+│  │  └─ UserRepository.java
 │  ├─ exception/
 │  │  ├─ InvalidAmountException.java
 │  │  ├─ ExpenseNotFoundException.java
-│  │  └─ DataAccessException.java
-│  │
+│  │  ├─ DataAccessException.java
+│  │  ├─ AuthenticationException.java
+│  │  └─ AccountNotFoundException.java
 │  ├─ ui/
 │  │  └─ ConsoleUI.java
-│  │
-│  └─ util/
-│     ├─ InputValidator.java
-│     ├─ DateUtils.java
-│     └─ FileUtils.java
-│
+│  ├─ util/
+│  │  ├─ InputValidator.java
+│  │  ├─ DateUtils.java
+│  │  └─ FileUtils.java
+│  └─ auth/
+│     └─ AuthManager.java
 ├─ data/
-│  └─ expenses.json  (or .csv / .txt depending on format)
-│
+│  ├─ accounts/        (stores account files for each user)
+│  │  └─ username.json
+│  ├─ expenses/        (optional expense files per user)
+│  │  └─ username_expenses.json
+│  └─ history/         (stores change logs per user)
+│     └─ username_history.json
 └─ README.md
 ```
 
@@ -204,7 +246,7 @@ CLI-Expense-Tracker/
 * Export to **CSV / PDF**
 * Use **database storage**
 * Develop **GUI / Web version**
-* Add **user accounts/login**
+* Add **user roles** and permissions
 
 ---
 
@@ -222,11 +264,17 @@ CLI-Expense-Tracker/
 
 ## Goal
 
-Deliver a **clean, maintainable, and extendable CLI Expense Tracker** suitable for:
+Deliver a **clean, maintainable, and extendable CLI Expense Tracker** with:
+
+* **User authentication & account management**
+* **Personal expense files**
+* **Expense history tracking**
+
+Suitable for:
 
 * Academic submission
 * Portfolio showcase
 * OOP demonstration
 * Software design example
-
+---
 ---
