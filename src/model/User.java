@@ -3,20 +3,20 @@ package model;
 // Methods: getters/setters, authentication helpers
 
 public class User { 
-    private String id;
+    private String email;
     private String username;
     private String password;
     private String expenseFileName;
 
-    public User(String id, String username, String password, String expenseFileName){
-        this.id = id;
+    public User(String email, String username, String password, String expenseFileName){
+        this.email = email;
         this.username = username;
         this.password = password;
         this.expenseFileName = expenseFileName;
     }
 
-    public String getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
     public String getUsername() {

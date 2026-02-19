@@ -136,10 +136,21 @@ After Login:
 
   * [ExpenseService.java](./src/service/ExpenseService.java)
 
-    * Methods: `addExpense()`, `updateExpense()`, `deleteExpense()`, `getAllExpenses()`, `getSummary()`, `getMonthlySummary()`, `getHistory()`
+    * Methods: 
+      - `addExpense()` → Adds a new expense for a user  
+      - `updateExpense()` → Updates an existing expense’s description or amount  
+      - `deleteExpense()` → Deletes a selected expense  
+      - `getAllExpenses()` → Returns a list of all expenses for a user  
+      - `getSummary()` → Shows total, count, highest and lowest expense  
+      - `getMonthlySummary()` → Shows expense summary for a specific month  
+      - `getHistory()` → Returns the log of all expense changes for auditing  
   * [UserService.java](./src/service/UserService.java)
 
-    * Methods: `registerUser()`, `loginUser()`, `validateUser()`, `createExpenseFile()`
+    * Methods: 
+      - `registerUser()` → Creates a new user account  
+      - `loginUser()` → Logs in a user by checking credentials  
+      - `validateUser()` → Checks if username/password are correct  
+      - `createExpenseFile()` → Creates a personal expense file for the user 
 
 ### REPOSITORY Package
 
@@ -148,21 +159,33 @@ After Login:
 
   * [ExpenseRepository.java](./src/repository/ExpenseRepository.java)
 
-    * Methods: `loadFromFile()`, `saveToFile()`, `add()`, `update()`, `delete()`, `loadHistory()`
+    * Methods: 
+      - `loadFromFile()` → Reads all expenses from the file  
+      - `saveToFile()` → Saves all expenses to the file  
+      - `add()` → Adds a new expense to the file  
+      - `update()` → Updates an existing expense in the file  
+      - `delete()` → Deletes an expense from the file  
+      - `loadHistory()` → Loads the expense change history from file  
+
   * [UserRepository.java](./src/repository/UserRepository.java)
 
-    * Methods: `loadUsers()`, `saveUsers()`, `addUser()`, `getUserByUsername()`, `updateAccountFile()`
+    * Methods:
+      - `loadUsers()` → Reads all user accounts from storage  
+      - `saveUsers()` → Saves all user accounts to storage  
+      - `addUser()` → Adds a new user to storage  
+      - `getUserByUsername()` → Finds a user by username  
+      - `updateAccountFile()` → Updates user account details in storage  
 
 ### EXCEPTION Package
 
 * **Purpose:** Custom exceptions
 * **Classes:**
 
-  * [InvalidAmountException.java](./src/exception/InvalidAmountException.java)
-  * [ExpenseNotFoundException.java](./src/exception/ExpenseNotFoundException.java)
-  * [DataAccessException.java](./src/exception/DataAccessException.java)
-  * [AuthenticationException.java](./src/exception/AuthenticationException.java)
-  * [AccountNotFoundException.java](./src/exception/AccountNotFoundException.java)
+  * [InvalidAmountException.java](./src/exception/InvalidAmountException.java)  → Thrown when an expense amount is invalid or negative 
+  * [ExpenseNotFoundException.java](./src/exception/ExpenseNotFoundException.java) → Thrown when an expense cannot be found  
+  * [DataAccessException.java](./src/exception/DataAccessException.java) → Thrown when there is a problem reading/writing files  
+  * [AuthenticationException.java](./src/exception/AuthenticationException.java) → Thrown when login fails  
+  * [AccountNotFoundException.java](./src/exception/AccountNotFoundException.java) → Thrown when a user account is missing  
 
 ### UI Package
 
@@ -170,13 +193,13 @@ After Login:
 * **Class:** [ConsoleUI.java](./src/ui/ConsoleUI.java)
 * **Methods:**
 
-  * `displayMenu()`
-  * `handleUserInput()`
-  * `showExpenses()`
-  * `showSummary()`
-  * `showHistory()`
-  * `showLoginMenu()`
-  * `manageAccount()` *(create/rename expense file)*
+  - `displayMenu()` → Shows the main menu to the user  
+  - `handleUserInput()` → Processes user’s menu choices  
+  - `showExpenses()` → Displays all expenses for the current user  
+  - `showSummary()` → Displays expense summary (total, count, highest/lowest)  
+  - `showHistory()` → Shows all changes to expenses for auditing  
+  - `showLoginMenu()` → Shows login and registration options  
+  - `manageAccount()` → Allows creating or renaming a personal expense file  
 
 ### UTIL Package
 
@@ -194,7 +217,13 @@ After Login:
 
   * [AuthManager.java](./src/auth/AuthManager.java)
 
-    * Methods: `register()`, `login()`, `logout()`, `isAuthenticated()`, `loadAccountFile()`, `createExpenseFile()`
+  * Methods:
+    - `register()` → Registers a new user through UserService  
+    - `login()` → Logs in a user through UserService  
+    - `logout()` → Logs out the current user  
+    - `isAuthenticated()` → Checks if a user is currently logged in  
+    - `loadAccountFile()` → Loads the user’s account details from file  
+    - `createExpenseFile()` → Creates a personal expense file for a user  
 
 ---
 
