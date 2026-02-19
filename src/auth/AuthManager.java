@@ -1,5 +1,7 @@
 package auth;
 
+import exception.AccountNotFoundException;
+import exception.AuthenticationException;
 import service.UserService;
 
 public class AuthManager {
@@ -14,19 +16,19 @@ public class AuthManager {
         createExpenseFile(expenseFileName);
     }
 
-    public void login(String email, String password){
+    public boolean login(String email, String password) throws AccountNotFoundException, AuthenticationException{
         boolean isAuthenticated = isAuthenticated(email, password);
 
-        if(isAuthenticated){
-            System.out.println("Successfully login");
-        }
+        if(isAuthenticated){ return true;}
+
+        return false;
     }
 
     public UserService getUserService() {
         return userService;
     }
 
-    public boolean isAuthenticated(String email, String password){
+    public boolean isAuthenticated(String email, String password) throws AccountNotFoundException, AuthenticationException{
         boolean isAuthenticated = userService.loginUser(email, password);
 
         return isAuthenticated;

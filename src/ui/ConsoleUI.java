@@ -1,6 +1,8 @@
 package ui;
 
 import auth.AuthManager;
+import exception.AccountNotFoundException;
+import exception.AuthenticationException;
 import repository.UserRepo;
 import service.UserService;
 import util.InputValidator;
@@ -15,18 +17,91 @@ public class ConsoleUI {
             InputValidator.readString("(Enter to continue)");
 
             // User Authenticaiton 
-            int choice = 0;
+            int login = 0;
             do{
-                choice = showLoginMenu();
+                login = showLoginMenu();
                 InputValidator.readString("");
 
-                switch (choice) {
-                    case 1 -> register();
-                    case 2 -> login();
-                    case 0 -> System.out.println("Exit");
+                switch (login) {
+                    case 1: register(); break;
+
+                    case 2: if(login()) {
+                        trackerDashboard();
+                    } else {
+                        System.out.println("No File Existed.");
+                    } 
+                    break;
+                    
+                    case 0: System.out.println("Exit"); break;
                 }
-            }while(choice != 0);
+            }while(login != 0);
             // End User Authentication
+    }
+
+    public void trackerDashboard(){
+        boolean islogout = false;
+        do {
+            int choice = displayMenu();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Option 1 selected");
+                    break;
+
+                case 2:
+                    System.out.println("Option 2 selected");
+                    break;
+
+                case 3:
+                    System.out.println("Option 3 selected");
+                    break;
+
+                case 4:
+                    System.out.println("Option 4 selected");
+                    break;
+
+                case 5:
+                    System.out.println("Option 5 selected");
+                    break;
+
+                case 6:
+                    System.out.println("Option 6 selected");
+                    break;
+
+                case 7:
+                    System.out.println("Option 7 selected");
+                    break;
+
+                case 8:
+                    System.out.println("Option 8 selected");
+                    break;
+
+                default:
+                    System.out.println("❌ Invalid choice.");
+            }
+
+        } while (islogout);
+    }
+
+    static int displayMenu(){
+        System.out.println("----- Expense Tracker Dashboard -----");
+        System.out.println("""
+            After Login:
+            1. Add Expense
+            2. Update Expense
+            3. Delete Expense
+            4. View Expenses
+            5. View Summary
+            6. View Monthly Summary
+            7. View Expense History
+            8. Manage Account / Expense File
+            0. Logout
+                """);
+
+            int choice = InputValidator.readInt("Enter choice: ");
+            InputValidator.readString("");
+
+            return choice;
     }
 
     static int showLoginMenu(){
@@ -60,11 +135,20 @@ public class ConsoleUI {
         userRepo.display();
     }
 
-    static void login(){
+    static boolean login() {
         String email = InputValidator.readString("Email: ");
         String password = InputValidator.readString("Password: ");
 
-        authManager.login(email, password);
+        boolean isLogin = false;
+        try{
+            isLogin = authManager.login(email, password);
+        }catch(AccountNotFoundException e){
+            System.out.println(e.getMessage());
+        } catch(AuthenticationException e){
+            System.out.println(e.getMessage());
+        }
+
+        return isLogin;
     }
 
 }
