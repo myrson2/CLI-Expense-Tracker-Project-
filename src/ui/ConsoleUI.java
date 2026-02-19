@@ -1,9 +1,13 @@
 package ui;
 
+import java.io.File;
+
 import auth.AuthManager;
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
+import repository.ExpenseRepo;
 import repository.UserRepo;
+import service.ExpenseService;
 import service.UserService;
 import util.InputValidator;
 
@@ -11,6 +15,9 @@ public class ConsoleUI {
     private static UserRepo userRepo = new UserRepo();
     private static UserService userService = new UserService(userRepo);
     private static AuthManager authManager = new AuthManager(userService);
+
+    private static ExpenseRepo expenseRepo = new ExpenseRepo();
+    private static ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
 
     public void start() {
             System.out.println("----- CLI EXPENSE TRACKER PROJECT -----");
@@ -39,13 +46,17 @@ public class ConsoleUI {
     }
 
     public void trackerDashboard(){
-        boolean islogout = false;
+
+        boolean islogout = true;
         do {
             int choice = displayMenu();
 
             switch (choice) {
-                case 1:
-                    System.out.println("Option 1 selected");
+                case 1: // Add Expense 
+                    String description = InputValidator.readString("Enter Description: ");
+                    double amount = InputValidator.readDouble("Enter Amount: ");
+
+                    expenseService.addExpense(description, amount, userService.getUser().getEmail());
                     break;
 
                 case 2:
@@ -132,7 +143,6 @@ public class ConsoleUI {
         String expenseFileName = InputValidator.readString("Enter Expense File Name: ").trim();
 
         authManager.registerUser(email, userName, password, expenseFileName);
-        userRepo.display();
     }
 
     static boolean login() {

@@ -1,5 +1,7 @@
 package auth;
 
+import java.io.File;
+
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
 import service.UserService;
@@ -34,9 +36,9 @@ public class AuthManager {
         return isAuthenticated;
     }
 
-    public void createExpenseFile(String expenseFileName){
-        if (userService.createExpenseFile(expenseFileName)){
-            System.out.println(userService.getUser().getExpenseFileName() + " expense file is created.");
-        }
+    public File createExpenseFile(String expenseFileName){
+        File createdFile = userService.createExpenseFile(expenseFileName);
+
+        return createdFile;
     }
 }

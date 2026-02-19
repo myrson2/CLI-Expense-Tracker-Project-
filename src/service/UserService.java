@@ -40,7 +40,7 @@ public class UserService {
             throw new AuthenticationException("Invalid or Incorrect Password");
         }
     }
-    public boolean createExpenseFile(String expenseFileName){
+    public File createExpenseFile(String expenseFileName){
         File expenseFile = new File("src/data/userExpenses/" + expenseFileName + ".txt");
         boolean existsOrCreated = expenseFile.exists();
 
@@ -52,7 +52,7 @@ public class UserService {
             System.out.println("Error creating file.");
         }
 
-        return existsOrCreated;
+        return expenseFile;
     }
 
     public UserRepo getUserRepo() {

@@ -14,4 +14,9 @@ public class InputValidator {
         System.out.print(str);
         return scan.nextInt();
     }
+
+    public static double readDouble(String str){
+        System.out.print(str);
+        return scan.nextDouble();
+    }
 }
