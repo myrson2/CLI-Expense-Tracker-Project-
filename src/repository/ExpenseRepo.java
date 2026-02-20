@@ -6,7 +6,7 @@ import model.Expense;
 import util.InputValidator;
 
 public class ExpenseRepo {
-    private static ArrayList<Expense> expenseList = new ArrayList<>();
+    private ArrayList<Expense> expenseList = new ArrayList<>();
 
     public void add(Expense expense){
         expenseList.add(expense);
@@ -37,7 +37,7 @@ public class ExpenseRepo {
         }
     }
 
-    public static ArrayList<Expense> getExpenseList() {
+    public ArrayList<Expense> getExpenseList() {
         return expenseList;
     }
 }

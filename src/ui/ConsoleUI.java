@@ -9,18 +9,18 @@ import service.UserService;
 import util.InputValidator;
 
 public class ConsoleUI {
-    private static UserRepo userRepo = new UserRepo();
-    private static UserService userService = new UserService(userRepo);
-    private static AuthManager authManager = new AuthManager(userService);
+    private final static UserRepo userRepo = new UserRepo();
+    private final static UserService userService = new UserService(userRepo);
+    private final static AuthManager authManager = new AuthManager(userService);
 
-    private static ExpenseRepo expenseRepo = new ExpenseRepo();
-    private static ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
+    private final static ExpenseRepo expenseRepo = new ExpenseRepo();
+    private final static ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
 
     public void start() {
             System.out.println("----- CLI EXPENSE TRACKER PROJECT -----");
             InputValidator.readString("(Enter to continue)");
 
-            // User Authenticaiton 
+            // User Authentication
             int login = 0;
             do{
                 login = showLoginMenu();
@@ -60,7 +60,7 @@ public class ConsoleUI {
                 case 2: // Update Expenses
                     // Make View Expenses First then show ids then make a implementation to get the expense using id 
                     System.out.println("----- Update Expenses -----");
-                    expenseService.viewExpenses();
+                    expenseService.getAllExpenses();
 
                     int updateExpense = InputValidator.readInt("Enter ID: ");
                     InputValidator.readString("");
@@ -75,13 +75,13 @@ public class ConsoleUI {
 
                 case 3: // Delete expenses
                     System.out.println("----- Update Expenses -----");
-                    expenseService.viewExpenses();
+                    expenseService.getAllExpenses();
 
                     int deleteExpense = InputValidator.readInt("Enter ID: ");
                     InputValidator.readString("");
-                    boolean isdeleted = expenseService.updateExpenses(deleteExpense);
+                    boolean deleted = expenseService.updateExpenses(deleteExpense);
 
-                    if(isdeleted){
+                    if(deleted){
                         System.out.println("Successfully Updated");
                     } else {
                         System.out.println("Error: Not Found or Invalid Inputs");
@@ -90,11 +90,12 @@ public class ConsoleUI {
 
                 case 4: // View expenses
                     System.out.println("----- View Expenses -----");
-                    expenseService.viewExpenses();
+                    expenseService.getAllExpenses();
                     break;
 
-                case 5:
-                    System.out.println("Option 5 selected");
+                case 5: // View Summary 
+                    System.out.println("----- View Summary -----");
+                    expenseService.viewSummary();
                     break;
 
                 case 6:
@@ -177,9 +178,7 @@ public class ConsoleUI {
         boolean isLogin = false;
         try{
             isLogin = authManager.login(email, password);
-        }catch(AccountNotFoundException e){
-            System.out.println(e.getMessage());
-        } catch(AuthenticationException e){
+        }catch(AccountNotFoundException | AuthenticationException e){
             System.out.println(e.getMessage());
         }
 
