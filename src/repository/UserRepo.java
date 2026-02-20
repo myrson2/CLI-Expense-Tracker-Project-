@@ -60,7 +60,7 @@ public class UserRepo {
                     }
         } else {
             try(FileWriter fw = new FileWriter(listOfAccounts, true)){
-                String addedAccount = String.format("Email: %s  ||  Username: %s", email, user.getUsername());
+                String addedAccount = String.format("Email: %s  ||  Username: %s\n", email, user.getUsername());
                 fw.append(addedAccount);
             } catch (IOException e){
                 System.out.println("Error.");

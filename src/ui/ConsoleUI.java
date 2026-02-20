@@ -1,7 +1,4 @@
 package ui;
-
-import java.io.File;
-
 import auth.AuthManager;
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
@@ -47,28 +44,53 @@ public class ConsoleUI {
 
     public void trackerDashboard(){
 
-        boolean islogout = true;
+        boolean islogout = false;
         do {
             int choice = displayMenu();
 
             switch (choice) {
                 case 1: // Add Expense 
+                    System.out.println("----- Add Expense -----");
                     String description = InputValidator.readString("Enter Description: ");
                     double amount = InputValidator.readDouble("Enter Amount: ");
 
                     expenseService.addExpense(description, amount, userService.getUser().getEmail());
                     break;
 
-                case 2:
-                    System.out.println("Option 2 selected");
+                case 2: // Update Expenses
+                    // Make View Expenses First then show ids then make a implementation to get the expense using id 
+                    System.out.println("----- Update Expenses -----");
+                    expenseService.viewExpenses();
+
+                    int updateExpense = InputValidator.readInt("Enter ID: ");
+                    InputValidator.readString("");
+                    boolean isUpdated = expenseService.updateExpenses(updateExpense);
+
+                    if(isUpdated){
+                        System.out.println("Successfully Updated");
+                    } else {
+                        System.out.println("Error: Not Found or Invalid Inputs");
+                    }
                     break;
 
-                case 3:
-                    System.out.println("Option 3 selected");
+                case 3: // Delete expenses
+                    System.out.println("----- Update Expenses -----");
+                    expenseService.viewExpenses();
+
+                    int deleteExpense = InputValidator.readInt("Enter ID: ");
+                    InputValidator.readString("");
+                    boolean isdeleted = expenseService.updateExpenses(deleteExpense);
+
+                    if(isdeleted){
+                        System.out.println("Successfully Updated");
+                    } else {
+                        System.out.println("Error: Not Found or Invalid Inputs");
+                    }
                     break;
 
-                case 4:
-                    System.out.println("Option 4 selected");
+                case 4: // View expenses
+                    System.out.println("----- View Expenses -----");
+                    expenseService.viewExpenses();
                     break;
 
                 case 5:
@@ -86,12 +108,15 @@ public class ConsoleUI {
                 case 8:
                     System.out.println("Option 8 selected");
                     break;
+                case 0:
+                    islogout = true;
+                    break;
 
                 default:
                     System.out.println("❌ Invalid choice.");
             }
 
-        } while (islogout);
+        } while (!islogout);
     }
 
     static int displayMenu(){
@@ -140,7 +165,7 @@ public class ConsoleUI {
         String userName = InputValidator.readString("Enter Username: ");
 
         // Assume after some Validation
-        String expenseFileName = InputValidator.readString("Enter Expense File Name: ").trim();
+        String expenseFileName = InputValidator.readString("Enter Expense File Name: ").trim().replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
 
         authManager.registerUser(email, userName, password, expenseFileName);
     }
