@@ -30,4 +30,21 @@ public class User {
     public String getExpenseFileName() {
         return expenseFileName;
     }
+
+    //setters
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setExpenseFileName(String expenseFileName) {
+        this.expenseFileName = expenseFileName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

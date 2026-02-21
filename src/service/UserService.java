@@ -55,6 +55,26 @@ public class UserService {
         return expenseFile;
     }
 
+    public void manageAccount(String email, String password, String userName, String expenseFileName) {
+        if (user == null) return ;
+
+        // Define the old and new file paths
+        File oldFile = new File("src/data/userExpenses/" + user.getExpenseFileName() + ".txt");
+        File newFile = new File("src/data/userExpenses/" + expenseFileName + ".txt");
+
+        // Attempt to physically rename the file
+        if (oldFile.exists() && oldFile.renameTo(newFile)) {
+            // Create an updated User object with the new filename
+            user = new User(user.getEmail(), user.getUsername(), user.getPassword(), expenseFileName);
+            
+            // Update the repository to ensure the change persists in listOfAccounts.txt
+            userRepo.saveUsers(user.getEmail(), user);
+        }
+        
+        userRepo.updateAccountFile(email, userName);
+        user.setPassword(password);
+    }
+
     public UserRepo getUserRepo() {
         return userRepo;
     }

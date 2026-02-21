@@ -224,6 +224,7 @@ After Login:
     - `isAuthenticated()` → Checks if a user is currently logged in  
     - `loadAccountFile()` → Loads the user’s account details from file  
     - `createExpenseFile()` → Creates a personal expense file for a user  
+   
 
 ---
 

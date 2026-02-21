@@ -106,8 +106,17 @@ public class ConsoleUI {
                     System.out.println("Option 7 selected");
                     break;
 
-                case 8:
-                    System.out.println("Option 8 selected");
+                case 8: // Manage Account / Expense File
+                    String email = InputValidator.readString("Enter new email: ");
+
+                    String password = InputValidator.readString("Enter new password: ");
+
+                    String userName = InputValidator.readString("Enter new Username: ");
+
+                    String expenseFileName = InputValidator.readString("Enter new Expense File Name: ").trim()
+                            .replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
+                    
+                    authManager.manageAccount(email, password, userName, expenseFileName);
                     break;
                 case 0:
                     islogout = true;

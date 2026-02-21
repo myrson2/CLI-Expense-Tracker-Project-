@@ -12,7 +12,7 @@ public class UserRepo {
 
     public void saveUsers(String email, User user){
         users.put(email, user);
-        updateAccountFile(email, user);
+        updateAccountFile(email, user.getUsername());
         // file handling
     }
 
@@ -36,7 +36,7 @@ public class UserRepo {
         }
     }
 
-    public void updateAccountFile(String email, User user){
+    public void updateAccountFile(String email, String userName){
         boolean existsOrCreated = listOfAccounts.exists();
         try {
             // Check if it exists OR create it if it doesn't
@@ -51,7 +51,7 @@ public class UserRepo {
             String contentFormat = String.format("""
                 All registered Accounts: 
                     Email: %s  ||  Username: %s
-                    """, email, user.getUsername());
+                    """, email, userName);
             
               try (FileWriter fw = new FileWriter(listOfAccounts)) { // No need to close manually with try-with-resources
                         fw.write(contentFormat);
@@ -60,7 +60,7 @@ public class UserRepo {
                     }
         } else {
             try(FileWriter fw = new FileWriter(listOfAccounts, true)){
-                String addedAccount = String.format("Email: %s  ||  Username: %s\n", email, user.getUsername());
+                String addedAccount = String.format("Email: %s  ||  Username: %s\n", email, userName);
                 fw.append(addedAccount);
             } catch (IOException e){
                 System.out.println("Error.");
