@@ -57,7 +57,39 @@ public class UserService {
     }
 
     public void manageAccount(String email, String password, String userName, String expenseFileName) {
-       userRepo.updateAccountFile(email, password, userName, expenseFileName);
+        User findUser = userRepo.getUserByEmail(email);
+        
+        if(findUser == null) {
+            System.out.println("User not found.");
+            return;
+        }
+        
+        // Check if expense file name has changed
+        String oldExpenseFileName = findUser.getExpenseFileName();
+        
+        if(!oldExpenseFileName.equals(expenseFileName)) {
+            // Rename the old expense file to the new one
+            String oldFilePath = "src/data/userExpenses/" + oldExpenseFileName + ".txt";
+            String newFilePath = "src/data/userExpenses/" + expenseFileName + ".txt";
+            
+            File oldFile = new File(oldFilePath);
+            File newFile = new File(newFilePath);
+            
+            if(oldFile.exists()) {
+                if(oldFile.renameTo(newFile)) {
+                    System.out.println("Expense file renamed from " + oldExpenseFileName + " to " + expenseFileName);
+                } else {
+                    System.out.println("Failed to rename expense file.");
+                    return;
+                }
+            } else {
+                System.out.println("Old expense file not found. Creating new one.");
+                createExpenseFile(expenseFileName);
+            }
+        }
+        
+        // Update the account file with new details
+        userRepo.updateAccountFile(email, password, userName, expenseFileName);
     }
 
     public UserRepo getUserRepo() {
