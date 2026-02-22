@@ -42,7 +42,7 @@ public class AuthManager {
         return createdFile;
     }
 
-    public void manageAccount(String email, String password, String userName, String expenseFileName){
-        userService.manageAccount(email, password, userName, expenseFileName);
+    public void manageAccount(String email){
+        userService.manageAccount(email);
     }
 }

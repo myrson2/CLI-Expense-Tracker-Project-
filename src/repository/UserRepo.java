@@ -1,42 +1,29 @@
 package repository;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+
 import model.User;
 
 public class UserRepo {
     private HashMap<String, User> users = new HashMap<>();
     File listOfAccounts = new File("src/data/accounts/listOfAccounts.txt");
 
-    public void saveUsers(String email, User user){
-        users.put(email, user);
-        updateAccountFile(email, user.getUsername());
-        // file handling
+    public User addUser(User user){
+        users.put(user.getEmail(), user);
+        return user;
     }
 
-    public User getUserByEmail(String email){
-        return users.get(email);
-    }
-
-    public HashMap<String, User> getUsers() {
-        return users;
-    }
-
-    public void display() {
-        if(users.isEmpty()){
-            System.out.println("No users found.");
-            return;
+    public void saveUsers(User user){
+        if(user == null){
+            System.out.println("User is null.");
         }
-        System.out.println("All registered users:");
-        for (String email : users.keySet()) {
-            User user = users.get(email);
-            System.out.println("Email: " + user.getEmail() + ", Username: " + user.getUsername());
-        }
-    }
-
-    public void updateAccountFile(String email, String userName){
+       
         boolean existsOrCreated = listOfAccounts.exists();
         try {
             // Check if it exists OR create it if it doesn't
@@ -47,25 +34,45 @@ public class UserRepo {
             System.out.println("Error creating file.");
         }
 
-        if(!existsOrCreated){
-            String contentFormat = String.format("""
+        try(BufferedWriter write = new BufferedWriter(new FileWriter(listOfAccounts))){
+             String contentFormat = String.format("""
                 All registered Accounts: 
-                    Email: %s  ||  Username: %s
-                    """, email, userName);
+                Email: %s  ||  Username: %s
+                    """, user.getEmail(), user.getUsername());
             
-              try (FileWriter fw = new FileWriter(listOfAccounts)) { // No need to close manually with try-with-resources
-                        fw.write(contentFormat);
-                    } catch (IOException e) {
-                        System.out.println("Write Error.");
-                    }
-        } else {
-            try(FileWriter fw = new FileWriter(listOfAccounts, true)){
-                String addedAccount = String.format("Email: %s  ||  Username: %s\n", email, userName);
-                fw.append(addedAccount);
-            } catch (IOException e){
-                System.out.println("Error.");
-            }
+            write.write(contentFormat);
+        } catch(IOException e){
+            e.printStackTrace();
         }
+    }
+
+    public void loadUsers() {
+       try( BufferedReader reader = new BufferedReader(new FileReader(listOfAccounts));) {
+            String line;
+            while((line = reader.readLine()) != null){
+                System.out.println(line);
+            }
+       } catch (IOException e) {
+        e.printStackTrace();
+       }
+    }
+
+    public void updateAccountFile(String email){   
+        User user = getUserByEmail(email);
+        
+        try(BufferedWriter update = new BufferedWriter(new FileWriter(listOfAccounts, true))){
+            
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public User getUserByEmail(String email){
+        return users.get(email);
+    }
+
+    public HashMap<String, User> getUsers() {
+        return users;
     }
 
 }

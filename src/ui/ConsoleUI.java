@@ -30,7 +30,7 @@ public class ConsoleUI {
                     case 1: register(); break;
 
                     case 2: if(login()) {
-                        trackerDashboard();
+                        handleUserInput();
                     } else {
                         System.out.println("No File Existed.");
                     } 
@@ -42,7 +42,7 @@ public class ConsoleUI {
             // End User Authentication
     }
 
-    public void trackerDashboard(){
+    public void handleUserInput(){
 
         boolean islogout = false;
         do {
@@ -108,15 +108,7 @@ public class ConsoleUI {
 
                 case 8: // Manage Account / Expense File
                     String email = InputValidator.readString("Enter new email: ");
-
-                    String password = InputValidator.readString("Enter new password: ");
-
-                    String userName = InputValidator.readString("Enter new Username: ");
-
-                    String expenseFileName = InputValidator.readString("Enter new Expense File Name: ").trim()
-                            .replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
-                    
-                    authManager.manageAccount(email, password, userName, expenseFileName);
+                    authManager.manageAccount(email);
                     break;
                 case 0:
                     islogout = true;
