@@ -56,8 +56,8 @@ public class UserService {
         return expenseFile;
     }
 
-    public void manageAccount(String email) {
-        userRepo.updateAccountFile(email);
+    public void manageAccount(String email, String password, String userName, String expenseFileName) {
+       userRepo.updateAccountFile(email, password, userName, expenseFileName);
     }
 
     public UserRepo getUserRepo() {

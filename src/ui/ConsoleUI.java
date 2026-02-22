@@ -107,8 +107,16 @@ public class ConsoleUI {
                     break;
 
                 case 8: // Manage Account / Expense File
-                    String email = InputValidator.readString("Enter new email: ");
-                    authManager.manageAccount(email);
+                    String email = InputValidator.readString("Enter email: ");
+
+                    String password = InputValidator.readString("Enter new password: ");
+
+                    String userName = InputValidator.readString("Enter new Username: ");
+
+                    String expenseFileName = InputValidator.readString("Enter new Expense File Name: ").trim()
+                            .replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
+                    
+                    authManager.manageAccount(email, password, userName, expenseFileName);
                     break;
                 case 0:
                     islogout = true;
