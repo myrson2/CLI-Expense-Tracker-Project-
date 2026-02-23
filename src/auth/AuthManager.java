@@ -38,7 +38,6 @@ public class AuthManager {
 
     public File createExpenseFile(String expenseFileName){
         File createdFile = userService.createExpenseFile(expenseFileName);
-
         return createdFile;
     }
 

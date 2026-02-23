@@ -13,7 +13,7 @@ public class ConsoleUI {
     private final static UserService userService = new UserService(userRepo);
     private final static AuthManager authManager = new AuthManager(userService);
 
-    private final static ExpenseRepo expenseRepo = new ExpenseRepo();
+    private final static ExpenseRepo expenseRepo = new ExpenseRepo(authManager);
     private final static ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
 
     public void start() {
@@ -79,10 +79,10 @@ public class ConsoleUI {
 
                     int deleteExpense = InputValidator.readInt("Enter ID: ");
                     InputValidator.readString("");
-                    boolean deleted = expenseService.updateExpenses(deleteExpense);
+                    boolean deleted = expenseService.deleteExpenses(deleteExpense);
 
                     if(deleted){
-                        System.out.println("Successfully Updated");
+                        System.out.println("Successfully Deleted");
                     } else {
                         System.out.println("Error: Not Found or Invalid Inputs");
                     }
