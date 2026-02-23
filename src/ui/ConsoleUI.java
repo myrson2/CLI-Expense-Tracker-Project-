@@ -99,11 +99,13 @@ public class ConsoleUI {
                     break;
 
                 case 6:
-                    System.out.println("Option 6 selected");
+                    System.out.println("----- View Monthly Summary -----");
+                    
                     break;
 
                 case 7:
-                    System.out.println("Option 7 selected");
+                    System.out.println("----- View History -----");
+                    expenseService.getHistory();
                     break;
 
                 case 8: // Manage Account / Expense File

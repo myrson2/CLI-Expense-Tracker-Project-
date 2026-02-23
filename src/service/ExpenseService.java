@@ -86,37 +86,7 @@ public class ExpenseService {
     }
 
     public void getHistory(){
-        /*
-         * USER ACTIVITY HISTORY LOGIC:
-         *
-         * 1. PURPOSE:
-         *    - Track all important user actions (adding, updating, deleting expenses, changing username, login/logout, etc.)
-         *    - Keep a timeline of changes with old and new values for auditing and reference.
-         *
-         * 2. HISTORY RECORD STRUCTURE:
-         *    - User ID / Email    → Who performed the action
-         *    - Action Type        → What kind of action (ADD_EXPENSE, UPDATE_USERNAME, DELETE_EXPENSE, etc.)
-         *    - Details            → Description of the change (e.g., old value → new value)
-         *    - Timestamp          → When the action occurred
-         *
-         * 3. LOGGING FLOW:
-         *    a) User performs an action (e.g., update expense)
-         *    b) Execute the action successfully
-         *    c) Record a history entry with all relevant details
-         *
-         * 4. STORAGE:
-         *    - Can use text file per user or a central log file
-         *    - Each entry is immutable (do not modify history after writing)
-         *
-         * 5. BEST PRACTICES:
-         *    - Only log after the action succeeds
-         *    - Separate main data and history logic (e.g., ExpenseService vs HistoryService)
-         *    - Include enough info to reconstruct what happened (old vs new values)
-         *
-         * 6. OPTIONAL:
-         *    - Add extra details like date/time format, action success/failure, or user device
-         *    - Consider grouping history by month or action type for reporting
-         */
+        expenseRepo.loadHistory();
     }
 
     public ExpenseRepo getExpenseRepo() {

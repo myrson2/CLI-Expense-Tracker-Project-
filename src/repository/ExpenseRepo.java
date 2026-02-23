@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import auth.AuthManager;
@@ -16,6 +18,7 @@ import util.InputValidator;
 public class ExpenseRepo {
     private AuthManager authManager;
     private ArrayList<Expense> expenseList = new ArrayList<>();
+    private ArrayList<String> history = new ArrayList<>();
 
     public ExpenseRepo(AuthManager authManager){
         this.authManager = authManager;
@@ -32,6 +35,9 @@ public class ExpenseRepo {
             String format = String.format("ID: %d  ||  Amount: %.2f  ||  Description: %s  ||  Date: %s  ||  Email: %s\n", expense.getId(), expense.getAmount(), expense.getDescription(), expense.getDate(), expense.getUserEmail());
             writer.append(format);
 
+            String description = String.format("Saved Expense ID %d: %s -> %.2f", expense.getId(), expense.getDescription(), expense.getAmount());
+
+            addHistory(description);
         } catch (IOException e) {
            e.printStackTrace();
         }
@@ -39,8 +45,10 @@ public class ExpenseRepo {
 
     public boolean update(int id){
         File userExpenseFile = authManager.createExpenseFile(authManager.getUserService().getUser().getExpenseFileName());
+        
         boolean isUpdated = false;
         for (Expense expense : expenseList) {
+            
             if (id == expense.getId()) {
                 String description = InputValidator.readString("Enter New Description: ");
                 expense.setDescription(description);
@@ -51,7 +59,6 @@ public class ExpenseRepo {
                 try(BufferedReader update = new BufferedReader(new FileReader(userExpenseFile));
                     PrintWriter writer = new PrintWriter(new FileWriter("src/data/userExpenses/temp.txt"))) {
                     String line;
-                    
 
                     while((line = update.readLine()) != null){
                         // Check if this line contains the email we're looking for
@@ -80,6 +87,9 @@ public class ExpenseRepo {
                 break;
             } 
         }
+
+        String description = String.format("Updated Expense - ID %d", id);
+        addHistory(description);
         return isUpdated;
     }
 
@@ -98,6 +108,9 @@ public class ExpenseRepo {
             }
         }
 
+        String description = String.format("Deleted Expense - ID %d", id);
+
+        addHistory(description);
         return isfound;
     }
 
@@ -107,7 +120,27 @@ public class ExpenseRepo {
         }
     }
 
+    public void addHistory(String description){
+        String details = historytime() + " || " + description;
+        history.add(details);
+    }
+
+    public void loadHistory(){
+        for (String histories : history) {
+            System.out.println(histories);
+        }
+    }
+
     public ArrayList<Expense> getExpenseList() {
         return expenseList;
     }
+
+    public String historytime(){
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedDate = myDateObj.format(myFormatObj);
+
+        return formattedDate;
+    }
+
 }
