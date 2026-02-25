@@ -89,10 +89,10 @@ public class ExpenseRepo {
                 }
 
                 isUpdated = true;
-            } else {
-                throw new ExpenseNotFoundException("Expense not found");
             }
         }
+
+        if(!isUpdated) throw new ExpenseNotFoundException("Expense not found");
 
         String description = String.format("Updated Expense - ID %d", id);
         addHistory(description);

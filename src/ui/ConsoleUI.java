@@ -27,7 +27,6 @@ public class ConsoleUI {
             int login = 0;
             do{
                 login = showLoginMenu();
-                InputValidator.readString("");
 
                 switch (login) {
                     case 1: register(); break;
@@ -161,8 +160,6 @@ public class ConsoleUI {
                 """);
 
             int choice = InputValidator.readInt("Enter choice: ");
-            InputValidator.readString("");
-
             return choice;
     }
 
