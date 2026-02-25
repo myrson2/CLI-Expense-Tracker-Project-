@@ -36,13 +36,13 @@ public class UserRepo {
             throw new DataAccessException("Unable to create accounts list file.", e);
         }
 
-        try(BufferedWriter write = new BufferedWriter(new FileWriter(listOfAccounts))){
+        try(BufferedWriter write = new BufferedWriter(new FileWriter(listOfAccounts, true))){
              String contentFormat = String.format("""
                 All registered Accounts: 
                 Email: %s  ||  Username: %s  ||  Password: %s  ||  Expense File: %s
                     """, user.getEmail(), user.getUsername(), user.getPassword(), user.getExpenseFileName());
             
-            write.write(contentFormat);
+            write.append(contentFormat);
         } catch(IOException e){
             throw new DataAccessException("Failed to save user information.", e);
         }
