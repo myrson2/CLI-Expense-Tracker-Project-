@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
+import exception.DataAccessException;
 import model.User;
 
 public class UserService {
@@ -17,7 +18,7 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public void registerUser(String email, String username, String password, String expenseFileName){
+    public void registerUser(String email, String username, String password, String expenseFileName) throws DataAccessException{
         // file exceptions here
         user = new User(email, username, password, expenseFileName);
         User addedUser = userRepo.addUser(user);
@@ -41,7 +42,7 @@ public class UserService {
             throw new AuthenticationException("Invalid or Incorrect Password");
         }
     }
-    public File createExpenseFile(String expenseFileName){
+    public File createExpenseFile(String expenseFileName) throws DataAccessException{
         File expenseFile = new File("src/data/userExpenses/" + expenseFileName + ".txt");
         boolean existsOrCreated = expenseFile.exists();
 
@@ -50,13 +51,13 @@ public class UserService {
                 expenseFile.createNewFile();
             }
         } catch (IOException e) {
-            System.out.println("Error creating file.");
+            throw new DataAccessException("Could not create expense file.", e);
         }
 
         return expenseFile;
     }
 
-    public void manageAccount(String email, String password, String userName, String expenseFileName) {
+    public void manageAccount(String email, String password, String userName, String expenseFileName) throws DataAccessException {
         User findUser = userRepo.getUserByEmail(email);
         
         if(findUser == null) {

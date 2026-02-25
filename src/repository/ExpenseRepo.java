@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import auth.AuthManager;
+import exception.ExpenseNotFoundException;
+import exception.InvalidAmountException;
+import exception.DataAccessException;
 import model.Expense;
 import util.InputValidator;
 
@@ -24,12 +27,13 @@ public class ExpenseRepo {
         this.authManager = authManager;
     }
 
-    public void add(Expense expense){
+    public void add(Expense expense) throws InvalidAmountException, DataAccessException{
+        if(expense.getAmount() <= 0) throw new InvalidAmountException("Amount should not be 0 or negative");
         expenseList.add(expense);
         savetoFile(expense);
     }
 
-    public void savetoFile(Expense expense){
+    public void savetoFile(Expense expense) throws DataAccessException{
         File userExpenseFile = authManager.createExpenseFile(authManager.getUserService().getUser().getExpenseFileName());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(userExpenseFile, true))){
             String format = String.format("ID: %d  ||  Amount: %.2f  ||  Description: %s  ||  Date: %s  ||  Email: %s\n", expense.getId(), expense.getAmount(), expense.getDescription(), expense.getDate(), expense.getUserEmail());
@@ -39,11 +43,12 @@ public class ExpenseRepo {
 
             addHistory(description);
         } catch (IOException e) {
-           e.printStackTrace();
+           // wrap underlying I/O problem in a checked exception for callers
+           throw new DataAccessException("Unable to save expense to file.", e);
         }
     }
 
-    public boolean update(int id){
+    public boolean update(int id) throws ExpenseNotFoundException, DataAccessException{
         File userExpenseFile = authManager.createExpenseFile(authManager.getUserService().getUser().getExpenseFileName());
         
         boolean isUpdated = false;
@@ -74,7 +79,7 @@ public class ExpenseRepo {
                     }
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new DataAccessException("Unable to update expense file.", e);
                 }
                 
                 File tempFile = new File("src/data/userExpenses/temp.txt");
@@ -85,7 +90,9 @@ public class ExpenseRepo {
 
                 isUpdated = true;
                 break;
-            } 
+            } else {
+                throw new ExpenseNotFoundException("Expense not found");
+            }
         }
 
         String description = String.format("Updated Expense - ID %d", id);
@@ -93,7 +100,7 @@ public class ExpenseRepo {
         return isUpdated;
     }
 
-    public boolean delete(int id){
+    public boolean delete(int id) throws ExpenseNotFoundException, DataAccessException {
         File userExpenseFile = authManager.createExpenseFile(authManager.getUserService().getUser().getExpenseFileName());
         boolean isfound = expenseList.removeIf(expense -> expense.getId() == id);
         if(isfound){
@@ -104,8 +111,10 @@ public class ExpenseRepo {
                     writer.write(format);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new DataAccessException("Unable to write deletion to file.", e);
             }
+        } else {
+            throw new ExpenseNotFoundException("Expense not found");
         }
 
         String description = String.format("Deleted Expense - ID %d", id);

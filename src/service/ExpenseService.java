@@ -3,6 +3,9 @@ package service;
 import repository.ExpenseRepo;
 
 import auth.AuthManager;
+import exception.ExpenseNotFoundException;
+import exception.InvalidAmountException;
+import exception.DataAccessException;
 import model.Expense;
 
 import java.util.ArrayList;
@@ -17,16 +20,16 @@ public class ExpenseService {
         this.authManager = authManager;
     }
 
-    public void addExpense(String description, double amount, String email){
+    public void addExpense(String description, double amount, String email) throws InvalidAmountException, DataAccessException{
         expense = new Expense(description, amount, email);
         expenseRepo.add(expense);
     }   
 
-    public boolean updateExpenses(int id){
+    public boolean updateExpenses(int id) throws ExpenseNotFoundException, DataAccessException{
         return expenseRepo.update(id);
     }
 
-    public boolean deleteExpenses(int id){
+    public boolean deleteExpenses(int id) throws ExpenseNotFoundException, DataAccessException{
         return expenseRepo.delete(id);
     }
 

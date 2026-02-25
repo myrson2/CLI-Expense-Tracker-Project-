@@ -207,8 +207,6 @@ After Login:
 * **Classes:**
 
   * [InputValidator.java](./src/util/InputValidator.java)
-  * [DateUtils.java](./src/util/DateUtils.java)
-  * [FileUtils.java](./src/util/FileUtils.java)
 
 ### AUTH Package
 
@@ -252,8 +250,6 @@ CLI-Expense-Tracker/
 │  │  └─ ConsoleUI.java
 │  ├─ util/
 │  │  ├─ InputValidator.java
-│  │  ├─ DateUtils.java
-│  │  └─ FileUtils.java
 │  └─ auth/
 │     └─ AuthManager.java
 ├─ data/
@@ -261,8 +257,6 @@ CLI-Expense-Tracker/
 │  │  └─ username.txt
 │  ├─ expenses/        (optional expense files per user)
 │  │  └─ username_expenses.txt
-│  └─ history/         (stores change logs per user)
-│     └─ username_history.tx
 └─ README.md
 ```
 

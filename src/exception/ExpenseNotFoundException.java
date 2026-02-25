@@ -1,5 +1,8 @@
 package exception;
 
-public class ExpenseNotFoundException {
+public class ExpenseNotFoundException extends Exception{
+    public ExpenseNotFoundException(String message){
+        super(message);
+    }
     
 }

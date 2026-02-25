@@ -2,6 +2,9 @@ package ui;
 import auth.AuthManager;
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
+import exception.ExpenseNotFoundException;
+import exception.InvalidAmountException;
+import exception.DataAccessException;
 import repository.ExpenseRepo;
 import repository.UserRepo;
 import service.ExpenseService;
@@ -51,10 +54,14 @@ public class ConsoleUI {
             switch (choice) {
                 case 1: // Add Expense 
                     System.out.println("----- Add Expense -----");
-                    String description = InputValidator.readString("Enter Description: ");
-                    double amount = InputValidator.readDouble("Enter Amount: ");
+                    try{
+                        String description = InputValidator.readString("Enter Description: ");
+                        double amount = InputValidator.readDouble("Enter Amount: ");
 
-                    expenseService.addExpense(description, amount, userService.getUser().getEmail());
+                        expenseService.addExpense(description, amount, userService.getUser().getEmail());
+                    } catch(InvalidAmountException | DataAccessException e){
+                        System.out.println("Error: " + e.getMessage());
+                    }
                     break;
 
                 case 2: // Update Expenses
@@ -62,14 +69,18 @@ public class ConsoleUI {
                     System.out.println("----- Update Expenses -----");
                     expenseService.getAllExpenses();
 
-                    int updateExpense = InputValidator.readInt("Enter ID: ");
-                    InputValidator.readString("");
-                    boolean isUpdated = expenseService.updateExpenses(updateExpense);
-
-                    if(isUpdated){
-                        System.out.println("Successfully Updated");
-                    } else {
-                        System.out.println("Error: Not Found or Invalid Inputs");
+                    try {
+                        int updateExpense = InputValidator.readInt("Enter ID: ");
+                        InputValidator.readString("");
+                        boolean isUpdated = expenseService.updateExpenses(updateExpense);
+                        
+                        if(isUpdated){
+                            System.out.println("Successfully Updated");
+                        } else {
+                            System.out.println("✗ Update failed. Expense not found or invalid data.");
+                        }
+                    } catch (ExpenseNotFoundException | DataAccessException e) {
+                        System.out.println("Error: " + e.getMessage());
                     }
                     break;
 
@@ -77,15 +88,20 @@ public class ConsoleUI {
                     System.out.println("----- Update Expenses -----");
                     expenseService.getAllExpenses();
 
-                    int deleteExpense = InputValidator.readInt("Enter ID: ");
-                    InputValidator.readString("");
-                    boolean deleted = expenseService.deleteExpenses(deleteExpense);
+                    try{
+                         int deleteExpense = InputValidator.readInt("Enter ID: ");
+                        InputValidator.readString("");
+                        boolean deleted = expenseService.deleteExpenses(deleteExpense);
 
-                    if(deleted){
-                        System.out.println("Successfully Deleted");
-                    } else {
-                        System.out.println("Error: Not Found or Invalid Inputs");
+                        if(deleted){
+                            System.out.println("Successfully Deleted");
+                        } else {
+                            System.out.println("Error: Not Found or Invalid Inputs");
+                        }
+                    } catch(ExpenseNotFoundException | DataAccessException e){
+                        System.out.println("Error: " + e.getMessage());
                     }
+
                     break;
 
                 case 4: // View expenses
@@ -99,16 +115,11 @@ public class ConsoleUI {
                     break;
 
                 case 6:
-                    System.out.println("----- View Monthly Summary -----");
-                    
-                    break;
-
-                case 7:
                     System.out.println("----- View History -----");
                     expenseService.getHistory();
                     break;
 
-                case 8: // Manage Account / Expense File
+                case 7: // Manage Account / Expense File
                     String email = InputValidator.readString("Enter email: ");
 
                     String password = InputValidator.readString("Enter new password: ");
@@ -118,7 +129,11 @@ public class ConsoleUI {
                     String expenseFileName = InputValidator.readString("Enter new Expense File Name: ").trim()
                             .replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
                     
-                    authManager.manageAccount(email, password, userName, expenseFileName);
+                    try {
+                        authManager.manageAccount(email, password, userName, expenseFileName);
+                    } catch (DataAccessException e) {
+                        System.out.println("Account update failed: " + e.getMessage());
+                    }
                     break;
                 case 0:
                     islogout = true;
@@ -140,9 +155,8 @@ public class ConsoleUI {
             3. Delete Expense
             4. View Expenses
             5. View Summary
-            6. View Monthly Summary
-            7. View Expense History
-            8. Manage Account / Expense File
+            6. View Expense History
+            7. Manage Account / Expense File
             0. Logout
                 """);
 
@@ -179,7 +193,11 @@ public class ConsoleUI {
         // Assume after some Validation
         String expenseFileName = InputValidator.readString("Enter Expense File Name: ").trim().replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9_\\-]", "");
 
-        authManager.registerUser(email, userName, password, expenseFileName);
+        try {
+            authManager.registerUser(email, userName, password, expenseFileName);
+        } catch (DataAccessException e) {
+            System.out.println("Registration failed: " + e.getMessage());
+        }
     }
 
     static boolean login() {

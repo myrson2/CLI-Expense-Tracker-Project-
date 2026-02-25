@@ -4,6 +4,7 @@ import java.io.File;
 
 import exception.AccountNotFoundException;
 import exception.AuthenticationException;
+import exception.DataAccessException;
 import service.UserService;
 
 public class AuthManager {
@@ -13,7 +14,7 @@ public class AuthManager {
         this.userService = userService;
     }
 
-    public void registerUser(String id, String username, String password, String expenseFileName){
+    public void registerUser(String id, String username, String password, String expenseFileName) throws DataAccessException{
         userService.registerUser(id, username, password, expenseFileName);
         createExpenseFile(expenseFileName);
     }
@@ -36,12 +37,12 @@ public class AuthManager {
         return isAuthenticated;
     }
 
-    public File createExpenseFile(String expenseFileName){
+    public File createExpenseFile(String expenseFileName) throws DataAccessException{
         File createdFile = userService.createExpenseFile(expenseFileName);
         return createdFile;
     }
 
-    public void manageAccount(String email, String password, String userName, String expenseFileName){
+    public void manageAccount(String email, String password, String userName, String expenseFileName) throws DataAccessException{
         userService.manageAccount(email, password, userName, expenseFileName);
     }
 }

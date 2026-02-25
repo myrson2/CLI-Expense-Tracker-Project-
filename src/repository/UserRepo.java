@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 import model.User;
+import exception.DataAccessException;
 
 public class UserRepo {
     private HashMap<String, User> users = new HashMap<>();
@@ -20,7 +21,7 @@ public class UserRepo {
         return user;
     }
 
-    public void saveUsers(User user){
+    public void saveUsers(User user) throws DataAccessException{
         if(user == null){
             System.out.println("User is null.");
         }
@@ -32,7 +33,7 @@ public class UserRepo {
                 listOfAccounts.createNewFile();
             }
         } catch (IOException e) {
-            System.out.println("Error creating file.");
+            throw new DataAccessException("Unable to create accounts list file.", e);
         }
 
         try(BufferedWriter write = new BufferedWriter(new FileWriter(listOfAccounts))){
@@ -43,22 +44,22 @@ public class UserRepo {
             
             write.write(contentFormat);
         } catch(IOException e){
-            e.printStackTrace();
+            throw new DataAccessException("Failed to save user information.", e);
         }
     }
 
-    public void loadUsers() {
+    public void loadUsers() throws DataAccessException {
        try( BufferedReader reader = new BufferedReader(new FileReader(listOfAccounts));) {
             String line;
             while((line = reader.readLine()) != null){
                 System.out.println(line);
             }
        } catch (IOException e) {
-        e.printStackTrace();
+        throw new DataAccessException("Unable to load users from file.", e);
        }
     }
 
-    public void updateAccountFile(String email, String password, String userName, String expenseFileName){   
+    public void updateAccountFile(String email, String password, String userName, String expenseFileName) throws DataAccessException{   
         User user = getUserByEmail(email);
         
         if(user == null) {
@@ -99,7 +100,7 @@ public class UserRepo {
             }
 
         } catch(IOException e){
-            e.printStackTrace();
+            throw new DataAccessException("Unable to update account file.", e);
         }
         
         // Step 3: Replace original file with temp file
