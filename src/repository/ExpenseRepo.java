@@ -89,7 +89,6 @@ public class ExpenseRepo {
                 }
 
                 isUpdated = true;
-                break;
             } else {
                 throw new ExpenseNotFoundException("Expense not found");
             }

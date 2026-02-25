@@ -12,12 +12,12 @@ import service.UserService;
 import util.InputValidator;
 
 public class ConsoleUI {
-    private final static UserRepo userRepo = new UserRepo();
-    private final static UserService userService = new UserService(userRepo);
-    private final static AuthManager authManager = new AuthManager(userService);
+    private final UserRepo userRepo = new UserRepo();
+    private final UserService userService = new UserService(userRepo);
+    private final AuthManager authManager = new AuthManager(userService);
 
-    private final static ExpenseRepo expenseRepo = new ExpenseRepo(authManager);
-    private final static ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
+    private final ExpenseRepo expenseRepo = new ExpenseRepo(authManager);
+    private final ExpenseService expenseService = new ExpenseService(expenseRepo, authManager);
 
     public void start() {
             System.out.println("----- CLI EXPENSE TRACKER PROJECT -----");
@@ -146,7 +146,7 @@ public class ConsoleUI {
         } while (!islogout);
     }
 
-    static int displayMenu(){
+    int displayMenu(){
         System.out.println("----- Expense Tracker Dashboard -----");
         System.out.println("""
             After Login:
@@ -166,7 +166,7 @@ public class ConsoleUI {
             return choice;
     }
 
-    static int showLoginMenu(){
+    int showLoginMenu(){
         System.out.println("\n----- User Authentication -----");
         System.out.println("""
                 1. Register
@@ -178,7 +178,7 @@ public class ConsoleUI {
         return choice;
     }
 
-    static void register(){
+    void register(){
         System.out.println("----- Registration -----\n");
 
         String email = InputValidator.readString("Enter email: ");
@@ -200,7 +200,7 @@ public class ConsoleUI {
         }
     }
 
-    static boolean login() {
+    boolean login() {
         String email = InputValidator.readString("Email: ");
         String password = InputValidator.readString("Password: ");
 

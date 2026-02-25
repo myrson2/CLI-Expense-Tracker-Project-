@@ -88,6 +88,7 @@ public class UserRepo {
                         Email: %s  ||  Username: %s  ||  Password: %s  ||  Expense File: %s
                             """, user.getEmail(), user.getUsername(), user.getPassword(), user.getExpenseFileName());
                     writer.print(updatedLine);
+                    writer.close();
                     found = true;
                 } else {
                     // Write all other lines as they are
